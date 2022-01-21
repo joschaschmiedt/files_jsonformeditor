@@ -1,0 +1,15 @@
+{
+  "name": "nextcloud/files_jsonformeditor",
+  "type": "project",
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  },
+  "license": "AGPL",
+  "authors": [
+    {
+      "name": "Joscha Schmiedt",
+      "email": "jus@bitgrid.net"
+    }
+  ],
+  "require": {}
+}
