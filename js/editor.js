@@ -1,15 +1,15 @@
-import { getSyntaxMode } from './SyntaxMode'
-import importAce from './ImportAce'
+// import { getSyntaxMode } from './SyntaxMode'
+// import importAce from './ImportAce'
 import escapeHTML from 'escape-html'
 import { generateUrl } from '@nextcloud/router'
 
 /** @type array[] supportedMimeTypes */
 const supportedMimeTypes = require('./supported_mimetypes.json')
 
-let ace
+// let ace
 export const JsonFormEditor = {
   /**
-   * Holds the editor container
+   * Holds the editor container (HTML element)
    */
   $container: null,
 
@@ -98,7 +98,7 @@ export const JsonFormEditor = {
     $message.text(t('files_jsonformeditor', 'Saving …')).show()
     // Send to server
     JsonFormEditor.saveFile(
-      window.aceEditor.getSession().getValue(),
+      // window.aceEditor.getSession().getValue(),
       JsonFormEditor.file,
       function (data) {
         // Yay
@@ -129,7 +129,7 @@ export const JsonFormEditor = {
       }
     )
     JsonFormEditor.saving = false
-    window.aceEditor.focus()
+    // window.aceEditor.focus()
   },
 
   /**
@@ -146,7 +146,7 @@ export const JsonFormEditor = {
       JsonFormEditor.hideEditor()
       // Try to save
       JsonFormEditor.saveFile(
-        window.aceEditor.getSession().getValue(),
+        // window.aceEditor.getSession().getValue(),
         JsonFormEditor.file,
         function () {
           OC.Notification.showTemporary(t('files_jsonformeditor', 'Saved'))
@@ -188,19 +188,15 @@ export const JsonFormEditor = {
     this.file.name = filename
     this.file.dir = context.dir
     this.fileList = context.fileList
-    importAce().then((_ace) => {
-      require('brace/ext/searchbox')
-      ace = _ace
-      this.loadEditor(JsonFormEditor.$container, JsonFormEditor.file)
-      history.pushState(
-        {
-          file: filename,
-          dir: context.dir,
-        },
-        'Editor',
-        '#filesjsonformeditor'
-      )
-    })
+    this.loadEditor(JsonFormEditor.$container, JsonFormEditor.file)
+    history.pushState(
+      {
+        file: filename,
+        dir: context.dir,
+      },
+      'Editor',
+      '#filesjsonformeditor'
+    )
   },
 
   /**
@@ -212,10 +208,6 @@ export const JsonFormEditor = {
       if (!JsonFormEditor.saving) {
         JsonFormEditor._onUnsaved()
       }
-    }
-    if (this.previewPluginOnChange) {
-      var text = window.aceEditor.getSession().getValue()
-      this.previewPluginOnChange(text, this.preview)
     }
   },
 
@@ -248,8 +240,12 @@ export const JsonFormEditor = {
     supportedMimeTypes.forEach((mime) => {
       OCA.Files.fileActions.registerAction({
         name: 'edit_jsonformeditor',
-        displayName: t('files_jsonformeditor', 'Edit in plain text editor'),
+        displayName: t(
+          'files_jsonformeditor',
+          'Edit in JSON forms text editor'
+        ),
         mime: mime,
+        filename: 'metadata.json',
         actionHandler: this._onEditorTrigger.bind(this),
         permissions: OC.PERMISSION_READ,
         iconClass: 'icon-edit',
@@ -285,34 +281,34 @@ export const JsonFormEditor = {
         // Remove loading
         $('#editor_container').removeClass('icon-loading')
         // Configure ace
-        _self.configureACE(file)
+        // _self.configureACE(file)
         // Show the controls
         _self.loadControlBar(file)
-        window.aceEditor.getSession().on('change', _self.setupAutosave)
+        // window.aceEditor.getSession().on('change', _self.setupAutosave)
         _self.bindVisibleActions()
-        window.aceEditor.focus()
+        // window.aceEditor.focus()
 
-        if (_self.previewPlugins[file.mime]) {
-          _self.preview = container.find('#preview')
-          _self.preview.addClass(file.mime.replace('/', '-'))
-          if (window.aceEditor.getReadOnly()) {
-            container.find('#editor_container').addClass('onlyPreview')
-          }
-          container.find('#editor_container').addClass('hasPreview')
-          _self.previewPluginOnChange = _.debounce(function (text, element) {
-            _self.loadPreviewPlugin(file.mime).then(function () {
-              _self.previewPlugins[file.mime].preview(text, element)
-            })
-          }, 200)
-          var text = window.aceEditor.getSession().getValue()
-          _self.previewPluginOnChange(text, _self.preview)
-          setTimeout(function () {
-            window.aceEditor.resize()
-          }, 500)
-          _self.loadPreviewControlBar()
-        } else {
-          _self.previewPluginOnChange = null
-        }
+        // if (_self.previewPlugins[file.mime]) {
+        //   _self.preview = container.find('#preview')
+        //   _self.preview.addClass(file.mime.replace('/', '-'))
+        //   if (window.aceEditor.getReadOnly()) {
+        //     container.find('#editor_container').addClass('onlyPreview')
+        //   }
+        //   container.find('#editor_container').addClass('hasPreview')
+        //   _self.previewPluginOnChange = _.debounce(function (text, element) {
+        //     _self.loadPreviewPlugin(file.mime).then(function () {
+        //       _self.previewPlugins[file.mime].preview(text, element)
+        //     })
+        //   }, 200)
+        //   var text = window.aceEditor.getSession().getValue()
+        //   _self.previewPluginOnChange(text, _self.preview)
+        //   setTimeout(function () {
+        //     window.aceEditor.resize()
+        //   }, 500)
+        //   _self.loadPreviewControlBar()
+        // } else {
+        //   _self.previewPluginOnChange = null
+        // }
       },
       function (message) {
         // Oh dear
@@ -325,14 +321,14 @@ export const JsonFormEditor = {
     )
   },
 
-  loadPreviewPlugin: function (mime) {
-    if (this.previewPluginsLoaded[mime]) {
-      return $.Deferred().resolve().promise()
-    }
-    this.previewPluginsLoaded[mime] = true
-    var plugin = this.previewPlugins[mime]
-    return $.when(plugin.init())
-  },
+  // loadPreviewPlugin: function (mime) {
+  //   if (this.previewPluginsLoaded[mime]) {
+  //     return $.Deferred().resolve().promise()
+  //   }
+  //   this.previewPluginsLoaded[mime] = true
+  //   var plugin = this.previewPlugins[mime]
+  //   return $.when(plugin.init())
+  // },
 
   /**
    * Load the editor control bar
@@ -371,42 +367,42 @@ export const JsonFormEditor = {
         container.find('#editor_container').addClass('onlyPreview')
         break
     }
-    setTimeout(function () {
-      window.aceEditor.resize()
-    }, 500)
+    // setTimeout(function () {
+    //   window.aceEditor.resize()
+    // }, 500)
   },
 
-  loadPreviewControlBar: function () {
-    var makeButton = function (type, tooltip, active) {
-      var button = $('<button/>')
-      button.tooltip({
-        title: tooltip,
-        container: 'body',
-        placement: 'bottom',
-        delay: { show: 500, hide: 0 },
-      })
-      if (active) {
-        button.addClass('active')
-      }
-      button.click(this.setPreviewMode.bind(this, type))
-      button.attr('data-type', type)
-      return button.css(
-        'background-image',
-        'url("' + OC.imagePath('files_jsonformeditor', type) + '")'
-      )
-    }.bind(this)
+  // loadPreviewControlBar: function () {
+  //   var makeButton = function (type, tooltip, active) {
+  //     var button = $('<button/>')
+  //     button.tooltip({
+  //       title: tooltip,
+  //       container: 'body',
+  //       placement: 'bottom',
+  //       delay: { show: 500, hide: 0 },
+  //     })
+  //     if (active) {
+  //       button.addClass('active')
+  //     }
+  //     button.click(this.setPreviewMode.bind(this, type))
+  //     button.attr('data-type', type)
+  //     return button.css(
+  //       'background-image',
+  //       'url("' + OC.imagePath('files_jsonformeditor', type) + '")'
+  //     )
+  //   }.bind(this)
 
-    var readonly = window.aceEditor.getReadOnly()
-    var controls = $('<span/>').attr('id', 'preview_editor_controls')
-    controls.append(makeButton('text', t('files_jsonformeditor', 'Edit')))
-    controls.append(
-      makeButton('mixed', t('files_jsonformeditor', 'Mixed'), !readonly)
-    )
-    controls.append(
-      makeButton('image', t('files_jsonformeditor', 'Preview'), readonly)
-    )
-    $('#editor_close').after(controls)
-  },
+  //   var readonly = window.aceEditor.getReadOnly()
+  //   var controls = $('<span/>').attr('id', 'preview_editor_controls')
+  //   controls.append(makeButton('text', t('files_jsonformeditor', 'Edit')))
+  //   controls.append(
+  //     makeButton('mixed', t('files_jsonformeditor', 'Mixed'), !readonly)
+  //   )
+  //   controls.append(
+  //     makeButton('image', t('files_jsonformeditor', 'Preview'), readonly)
+  //   )
+  //   $('#editor_close').after(controls)
+  // },
 
   /**
    * Removes the control bar
@@ -446,55 +442,55 @@ export const JsonFormEditor = {
   /**
    * Configure the ACE editor
    */
-  configureACE: function (file) {
-    window.aceEditor = ace.edit(this.editor)
-    aceEditor.getSession().setNewLineMode('auto')
-    aceEditor.setShowPrintMargin(false)
-    aceEditor.getSession().setUseWrapMode(true)
-    if (!file.writeable) {
-      aceEditor.setReadOnly(true)
-    }
-    if (file.mime && file.mime === 'text/html') {
-      this.setEditorSyntaxMode('html')
-    } else {
-      // Set the syntax mode based on the file extension
-      this.setEditorSyntaxMode(
-        file.name.split('.')[file.name.split('.').length - 1]
-      )
-    }
-    // Set the theme
-    import('brace/theme/clouds').then(() => {
-      window.aceEditor.setTheme('ace/theme/clouds')
-    })
-    // Bind the edit event
-    window.aceEditor.getSession().on('change', this._onEdit.bind(this))
-    // Bind save trigger
-    window.aceEditor.commands.addCommand({
-      name: 'save',
-      bindKey: {
-        win: 'Ctrl-S',
-        mac: 'Command-S',
-        sender: 'editor',
-      },
-      exec: JsonFormEditor._onSaveTrigger,
-    })
+  // configureACE: function (file) {
+  //   window.aceEditor = ace.edit(this.editor)
+  //   aceEditor.getSession().setNewLineMode('auto')
+  //   aceEditor.setShowPrintMargin(false)
+  //   aceEditor.getSession().setUseWrapMode(true)
+  //   if (!file.writeable) {
+  //     aceEditor.setReadOnly(true)
+  //   }
+  //   if (file.mime && file.mime === 'text/html') {
+  //     this.setEditorSyntaxMode('html')
+  //   } else {
+  //     // Set the syntax mode based on the file extension
+  //     this.setEditorSyntaxMode(
+  //       file.name.split('.')[file.name.split('.').length - 1]
+  //     )
+  //   }
+  //   // Set the theme
+  //   import('brace/theme/clouds').then(() => {
+  //     window.aceEditor.setTheme('ace/theme/clouds')
+  //   })
+  //   // Bind the edit event
+  //   window.aceEditor.getSession().on('change', this._onEdit.bind(this))
+  //   // Bind save trigger
+  //   window.aceEditor.commands.addCommand({
+  //     name: 'save',
+  //     bindKey: {
+  //       win: 'Ctrl-S',
+  //       mac: 'Command-S',
+  //       sender: 'editor',
+  //     },
+  //     exec: JsonFormEditor._onSaveTrigger,
+  //   })
 
-    // disable Ctrl-T shortcut in ace to allow new tab feature in browser
-    window.aceEditor.commands.removeCommand(
-      window.aceEditor.commands.byName.transposeletters
-    )
-  },
+  //   // disable Ctrl-T shortcut in ace to allow new tab feature in browser
+  //   window.aceEditor.commands.removeCommand(
+  //     window.aceEditor.commands.byName.transposeletters
+  //   )
+  // },
 
   /**
    * Sets the syntax highlighting for the editor based on the file extension
    */
-  setEditorSyntaxMode: function (extension) {
-    getSyntaxMode(extension).then(function (mode) {
-      if (mode) {
-        window.aceEditor.getSession().setMode(`ace/mode/${mode}`)
-      }
-    })
-  },
+  // setEditorSyntaxMode: function (extension) {
+  //   getSyntaxMode(extension).then(function (mode) {
+  //     if (mode) {
+  //       window.aceEditor.getSession().setMode(`ace/mode/${mode}`)
+  //     }
+  //   })
+  // },
 
   /**
    * Loads the data through AJAX

@@ -8,7 +8,7 @@
  * @copyright Tom Needham 2015
  */
 
-import { SidebarPreview } from './sidebarpreview'
+// import { SidebarPreview } from './sidebarpreview'
 import { JsonFormEditor } from './editor'
 import { newFileMenuPlugin } from './newfileplugin'
 
@@ -20,7 +20,7 @@ __webpack_require__.nc = script['nonce'] || script.getAttribute('nonce')
 OCA.Files_JsonFormEditor = JsonFormEditor
 
 OC.Plugins.register('OCA.Files.NewFileMenu', newFileMenuPlugin)
-OC.Plugins.register('OCA.Files.SidebarPreviewManager', new SidebarPreview())
+// OC.Plugins.register('OCA.Files.SidebarPreviewManager', new SidebarPreview())
 
 $(document).ready(function () {
   $('#editor').remove()
