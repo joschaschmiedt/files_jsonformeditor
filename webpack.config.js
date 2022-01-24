@@ -1,4 +1,5 @@
 const webpack = require('webpack')
+
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
@@ -14,10 +15,19 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
     uniqueName: 'files_jsonformeditor',
   },
+  optimization: {
+    minimize: false,
+  },
   resolve: {
     extensions: ['.ts', '.js'],
   },
-  plugins: [new CleanWebpackPlugin()],
+  plugins: [
+    new CleanWebpackPlugin(),
+    new webpack.ProvidePlugin({
+      $: require.resolve('jquery'),
+      jQuery: require.resolve('jquery'),
+    }),
+  ],
   module: {
     rules: [
       {

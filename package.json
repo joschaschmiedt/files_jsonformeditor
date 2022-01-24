@@ -23,6 +23,7 @@
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^5.2.6",
     "escape-html": "^1.0.3",
+    "exports-loader": "^3.1.0",
     "file-loader": "^6.2.0",
     "promise-loader": "^1.0.0",
     "style-loader": "^3.3.1",
@@ -33,6 +34,7 @@
   "dependencies": {
     "@nextcloud/router": "^1.2.0",
     "brace": "^0.11.1",
+    "jquery": "3.6.0",
     "marked": "^2.1.3"
   }
 }
