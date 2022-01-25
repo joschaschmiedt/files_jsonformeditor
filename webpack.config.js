@@ -2,17 +2,18 @@ const webpack = require('webpack')
 
 const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const { VueLoaderPlugin } = require('vue-loader')
 
 module.exports = {
   devtool: 'source-map',
   entry: {
-    editor: './js/index.js',
-    'public-share': './js/public-share.js',
+    editor: './src/index.ts',
+    'public-share': './src/public-share.js',
   },
   output: {
     filename: '[name].js',
     chunkFilename: '[name].bundle.js',
-    path: path.resolve(__dirname, 'build'),
+    path: path.resolve(__dirname, 'js'),
     uniqueName: 'files_jsonformeditor',
   },
   optimization: {
@@ -27,15 +28,18 @@ module.exports = {
       $: require.resolve('jquery'),
       jQuery: require.resolve('jquery'),
     }),
+    new VueLoaderPlugin(),
   ],
   module: {
     rules: [
       {
-        test: /\.js$/,
-        include: [path.resolve(__dirname, 'js')],
+        // test: /\.js$/,
+        test: /\.tsx?/,
+        include: [path.resolve(__dirname, 'src')],
         use: {
-          loader: 'babel-loader',
+          loader: 'ts-loader',
         },
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
@@ -49,6 +53,10 @@ module.exports = {
             options: {},
           },
         ],
+      },
+      {
+        test: /\.vue$/,
+        loader: 'vue-loader',
       },
     ],
   },

@@ -31,7 +31,7 @@ class LoadPublicScriptsListener implements IEventListener
 {
 	public function handle(Event $event): void
 	{
-		Util::addScript('files_jsonformeditor', '../build/public-share');
+		Util::addScript('files_jsonformeditor', '../js/public-share');
 		Util::addStyle('files_jsonformeditor', 'public-share');
 	}
 }

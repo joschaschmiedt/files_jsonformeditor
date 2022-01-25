@@ -32,6 +32,6 @@ class LoadFilesScriptsListener implements IEventListener
 	public function handle(Event $event): void
 	{
 		Util::addStyle('files_jsonformeditor', 'merged');
-		Util::addScript('files_jsonformeditor', '../build/editor');
+		Util::addScript('files_jsonformeditor', '../js/editor');
 	}
 }

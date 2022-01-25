@@ -1,5 +1,3 @@
-declare var OC: Nextcloud.v21.OC | Nextcloud.v22.OC | Nextcloud.v23.OC
-
 export const newFileMenuPlugin = {
   attach: function (menu) {
     var fileList = menu.fileList
@@ -17,8 +15,8 @@ export const newFileMenuPlugin = {
     // register the new menu entry
     menu.addMenuEntry({
       id: 'file',
-      displayName: t('files_jsonformeditor', 'New text file'),
-      templateName: t('files_jsonformeditor', 'New text file.txt'),
+      displayName: 'New JSON form file',
+      templateName: 'form.json',
       iconClass: 'icon-filetype-text',
       fileType: 'file',
       actionHandler: function (name) {
