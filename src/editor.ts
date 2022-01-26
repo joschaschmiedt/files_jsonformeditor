@@ -4,9 +4,10 @@ import escapeHTML from 'escape-html'
 import { generateUrl } from '@nextcloud/router'
 import * as _ from 'lodash';
 
-import '@jsonforms/vue-vanilla/vanilla.css';
-import App from './App.vue'
+// import '@jsonforms/vue-vanilla/vanilla.css';
+import App from './hello.vue'
 import { createApp } from 'vue'
+import { create } from 'lodash';
 
 /// <reference types="@nextcloud/typings" />
 declare var OC: Nextcloud.v21.OC | Nextcloud.v22.OC | Nextcloud.v23.OC;
@@ -17,7 +18,9 @@ declare var OCA: any
 /** @type array[] supportedMimeTypes */
 const supportedMimeTypes = require('./supported_mimetypes.json')
 
-// let ace
+const app = createApp(App);
+// let app
+
 export const JsonFormEditor = {
   /**
    * Holds the editor container (HTML element)
@@ -28,6 +31,10 @@ export const JsonFormEditor = {
    * Holds the editor element ID
    */
   editor: 'filesjsonformeditor',
+
+  /**
+   * Holds the app for the editor
+   */
 
   /**
    * Stores info on the file being edited
@@ -204,6 +211,8 @@ export const JsonFormEditor = {
     this.file.dir = context.dir
     this.fileList = context.fileList
     this.loadEditor(JsonFormEditor.$container, JsonFormEditor.file)
+    // app.mount('#filesjsonformeditor')
+
     history.pushState(
       {
         file: filename,
@@ -246,6 +255,7 @@ export const JsonFormEditor = {
     this.$container = container
     this.registerFileActions()
     this.oldTitle = document.title
+    
   },
 
   /**
@@ -292,12 +302,13 @@ export const JsonFormEditor = {
         // Success!
         // Sort the title
         document.title = file.name + ' - ' + JsonFormEditor.oldTitle
-        // Load ace
+        
         $('#' + _self.editor).text(data)
+        
         // Remove loading
         $('#editor_container').removeClass('icon-loading')
 
-        // createApp(App).mount('#app')
+        app.mount('#filesjsonformeditor')
 
         // Configure ace
         // _self.configureACE(file)
