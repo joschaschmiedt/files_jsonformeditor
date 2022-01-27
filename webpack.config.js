@@ -1,9 +1,17 @@
 const webpack = require('webpack')
-
 const path = require('path')
+
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
+const TerserPlugin = require('terser-webpack-plugin')
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+
+const appName = process.env.npm_package_name
+const appVersion = process.env.npm_package_version
+const buildMode = process.env.NODE_ENV
+const isDev = buildMode === 'development'
+console.info('Building', appName, appVersion, '\n')
 
 module.exports = {
   devtool: 'source-map',
@@ -18,7 +26,17 @@ module.exports = {
     uniqueName: 'files_jsonformeditor',
   },
   optimization: {
-    minimize: false,
+    minimize: !isDev,
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          output: {
+            comments: false,
+          },
+        },
+        extractComments: true,
+      }),
+    ],
   },
   resolve: {
     extensions: ['.ts', '.js'],
@@ -43,6 +61,12 @@ module.exports = {
       // set the current working directory for displaying module paths
       cwd: process.cwd(),
     }),
+
+    new NodePolyfillPlugin(),
+
+    // Make appName & appVersion available as a constant
+    new webpack.DefinePlugin({ appName: JSON.stringify(appName) }),
+    new webpack.DefinePlugin({ appVersion: JSON.stringify(appVersion) }),
   ],
   module: {
     rules: [
