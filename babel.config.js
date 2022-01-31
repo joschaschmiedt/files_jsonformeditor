@@ -4,8 +4,9 @@ module.exports = {
 		[
 			'@babel/preset-env',
 			{
-				modules: false
-			}
-		]
-	]
+				useBuiltIns: false,
+				modules: 'auto',
+			},
+		],
+	],
 }
