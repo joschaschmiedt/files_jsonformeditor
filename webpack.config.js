@@ -1,3 +1,16 @@
+// webpack.config.js
+
+const path = require('path')
+const webpack = require('webpack')
+const webpackConfig = require('@nextcloud/webpack-vue-config')
+
+webpackConfig.plugins.push(new webpack.ProvidePlugin({
+	$: 'jquery',
+	jQuery: 'jquery',
+}))
+
+module.exports = webpackConfig
+
 // const webpack = require('webpack')
 // const webpackConfig = require('@nextcloud/webpack-vue-config')
 
@@ -33,157 +46,157 @@
  *
  */
 
-const path = require('path')
-const webpack = require('webpack')
-
-const { VueLoaderPlugin } = require('vue-loader')
-const ESLintPlugin = require('eslint-webpack-plugin')
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
-const StyleLintPlugin = require('stylelint-webpack-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
-
-const appName = process.env.npm_package_name
-const appVersion = process.env.npm_package_version
-const buildMode = process.env.NODE_ENV
-const isDev = buildMode === 'development'
-console.info('Building', appName, appVersion, '\n')
-
-// const rules = require('./rules'
-const rules = {
-	RULE_CSS: {
-		test: /\.css$/,
-		use: ['style-loader', 'css-loader'],
-	},
-	RULE_SCSS: {
-		test: /\.scss$/,
-		use: ['style-loader', 'css-loader', 'sass-loader'],
-	},
-	RULE_VUE: {
-		test: /\.vue$/,
-		loader: 'vue-loader',
-	},
-	RULE_JS: {
-		test: /\.js$/,
-		loader: 'babel-loader',
-		exclude: /node_modules/,
-	},
-	RULE_ASSETS: {
-		test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf)$/,
-		type: 'asset/inline',
-	},
-}
-
-module.exports = {
-	 target: 'web',
-	 mode: buildMode,
-	 devtool: isDev ? 'cheap-source-map' : 'source-map',
-
-	 entry: {
-		 main: path.resolve(path.join('src', 'main.js')),
-	 },
-	 output: {
-		 path: path.resolve('./js'),
-		 publicPath: path.join('/apps/', appName, '/js/'),
-		 filename: `${appName}-[name].js?v=[contenthash]`,
-		 chunkFilename: `${appName}-[name].js?v=[contenthash]`,
-		 // Make sure sourcemaps have a proper path and do not
-		 // leak local paths https://github.com/webpack/webpack/issues/3603
-		 devtoolNamespace: appName,
-		 devtoolModuleFilenameTemplate(info) {
-			 const rootDir = process.cwd()
-			 const rel = path.relative(rootDir, info.absoluteResourcePath)
-			 return `webpack:///${appName}/${rel}`
-		 },
-	 },
-
-	 devServer: {
-		 hot: true,
-		 host: '127.0.0.1',
-		 port: 3000,
-		 client: {
-			 overlay: false,
-		 },
-		 devMiddleware: {
-			 writeToDisk: true,
-		 },
-		 headers: {
-			 'Access-Control-Allow-Origin': '*',
-		 },
-	 },
-
-	 optimization: {
-		 chunkIds: 'named',
-		 splitChunks: {
-			 automaticNameDelimiter: '-',
-		 },
-		 minimize: !isDev,
-		 minimizer: [
-			 new TerserPlugin({
-				 terserOptions: {
-					 output: {
-						 comments: false,
-					 },
-				 },
-				 extractComments: true,
-			 }),
-		 ],
-	 },
-
-	 module: {
-		 rules: Object.values(rules),
-	 },
-
-	 plugins: [
-		 new ESLintPlugin({
-			 extensions: ['js', 'vue'],
-			 files: 'src',
-			 failOnError: !isDev,
-		 }),
-
-		 new VueLoaderPlugin(),
-		 new StyleLintPlugin({
-			 files: 'src/**/*.{css,scss,vue}',
-			 failOnError: !isDev,
-		 }),
-
-		 // Make sure we auto-inject node polyfills on demand
-		 // https://webpack.js.org/blog/2020-10-10-webpack-5-release/#automatic-nodejs-polyfills-removed
-		 new NodePolyfillPlugin(),
-
-		 // Make appName & appVersion available as a constant
-		 new webpack.DefinePlugin({ appName: JSON.stringify(appName) }),
-		 new webpack.DefinePlugin({ appVersion: JSON.stringify(appVersion) }),
-		 new webpack.ProvidePlugin({
-			$: 'jquery',
-			jQuery: 'jquery',
-		}),
-	 ],
-
-	 resolve: {
-		 extensions: ['*', '.js', '.vue'],
-		 symlinks: false,
-	 },
-}
-
+// const path = require('path')
 // const webpack = require('webpack')
 
-// const path = require('path')
-// const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// const { VueLoaderPlugin } = require('vue-loader')
+// const ESLintPlugin = require('eslint-webpack-plugin')
+// const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
+// const StyleLintPlugin = require('stylelint-webpack-plugin')
+// const TerserPlugin = require('terser-webpack-plugin')
+
+// const appName = process.env.npm_package_name
+// const appVersion = process.env.npm_package_version
+// const buildMode = process.env.NODE_ENV
+// const isDev = buildMode === 'development'
+// console.info('Building', appName, appVersion, '\n')
+
+// // const rules = require('./rules'
+// const rules = {
+// 	RULE_CSS: {
+// 		test: /\.css$/,
+// 		use: ['style-loader', 'css-loader'],
+// 	},
+// 	RULE_SCSS: {
+// 		test: /\.scss$/,
+// 		use: ['style-loader', 'css-loader', 'sass-loader'],
+// 	},
+// 	RULE_VUE: {
+// 		test: /\.vue$/,
+// 		loader: 'vue-loader',
+// 	},
+// 	RULE_JS: {
+// 		test: /\.js$/,
+// 		loader: 'babel-loader',
+// 		exclude: /node_modules/,
+// 	},
+// 	RULE_ASSETS: {
+// 		test: /\.(png|jpe?g|gif|svg|woff2?|eot|ttf)$/,
+// 		type: 'asset/inline',
+// 	},
+// }
 
 // module.exports = {
-//   devtool: 'source-map',
-//   entry: {
-//     editor: './js/index.js',
-//     'public-share': './js/public-share.js',
-//   },
-//   output: {
-//     filename: '[name].js',
-//     chunkFilename: '[name].bundle.js',
-//     path: path.resolve(__dirname, 'build'),
-//     uniqueName: 'files_jsonformeditor',
-//   },
-//   optimization: {
-//     minimize: false,
+// 	 target: 'web',
+// 	 mode: buildMode,
+// 	 devtool: isDev ? 'cheap-source-map' : 'source-map',
+
+// 	 entry: {
+// 		 main: path.resolve(path.join('src', 'main.js')),
+// 	 },
+// 	 output: {
+// 		 path: path.resolve('./js'),
+// 		 publicPath: path.join('/apps/', appName, '/js/'),
+// 		 filename: `${appName}-[name].js?v=[contenthash]`,
+// 		 chunkFilename: `${appName}-[name].js?v=[contenthash]`,
+// 		 // Make sure sourcemaps have a proper path and do not
+// 		 // leak local paths https://github.com/webpack/webpack/issues/3603
+// 		 devtoolNamespace: appName,
+// 		 devtoolModuleFilenameTemplate(info) {
+// 			 const rootDir = process.cwd()
+// 			 const rel = path.relative(rootDir, info.absoluteResourcePath)
+// 			 return `webpack:///${appName}/${rel}`
+// 		 },
+// 	 },
+
+// 	 devServer: {
+// 		 hot: true,
+// 		 host: '127.0.0.1',
+// 		 port: 3000,
+// 		 client: {
+// 			 overlay: false,
+// 		 },
+// 		 devMiddleware: {
+// 			 writeToDisk: true,
+// 		 },
+// 		 headers: {
+// 			 'Access-Control-Allow-Origin': '*',
+// 		 },
+// 	 },
+
+// 	 optimization: {
+// 		 chunkIds: 'named',
+// 		 splitChunks: {
+// 			 automaticNameDelimiter: '-',
+// 		 },
+// 		 minimize: !isDev,
+// 		 minimizer: [
+// 			 new TerserPlugin({
+// 				 terserOptions: {
+// 					 output: {
+// 						 comments: false,
+// 					 },
+// 				 },
+// 				 extractComments: true,
+// 			 }),
+// 		 ],
+// 	 },
+
+// 	 module: {
+// 		 rules: Object.values(rules),
+// 	 },
+
+// 	 plugins: [
+// 		 new ESLintPlugin({
+// 			 extensions: ['js', 'vue'],
+// 			 files: 'src',
+// 			 failOnError: !isDev,
+// 		 }),
+
+// 		 new VueLoaderPlugin(),
+// 		 new StyleLintPlugin({
+// 			 files: 'src/**/*.{css,scss,vue}',
+// 			 failOnError: !isDev,
+// 		 }),
+
+// 		 // Make sure we auto-inject node polyfills on demand
+// 		 // https://webpack.js.org/blog/2020-10-10-webpack-5-release/#automatic-nodejs-polyfills-removed
+// 		 new NodePolyfillPlugin(),
+
+// 		 // Make appName & appVersion available as a constant
+// 		 new webpack.DefinePlugin({ appName: JSON.stringify(appName) }),
+// 		 new webpack.DefinePlugin({ appVersion: JSON.stringify(appVersion) }),
+// 		 new webpack.ProvidePlugin({
+// 			$: 'jquery',
+// 			jQuery: 'jquery',
+// 		}),
+// 	 ],
+
+// 	 resolve: {
+// 		 extensions: ['*', '.js', '.vue'],
+// 		 symlinks: false,
+// 	 },
+// }
+
+// // const webpack = require('webpack')
+
+// // const path = require('path')
+// // const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+
+// // module.exports = {
+// //   devtool: 'source-map',
+// //   entry: {
+// //     editor: './js/index.js',
+// //     'public-share': './js/public-share.js',
+// //   },
+// //   output: {
+// //     filename: '[name].js',
+// //     chunkFilename: '[name].bundle.js',
+// //     path: path.resolve(__dirname, 'build'),
+// //     uniqueName: 'files_jsonformeditor',
+// //   },
+// //   optimization: {
+// //     minimize: false,
 //   },
 //   resolve: {
 //     extensions: ['.ts', '.js'],
